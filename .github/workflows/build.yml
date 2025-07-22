@@ -1,0 +1,30 @@
+name: Build & Deploy CV
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install LaTeX
+        run: sudo apt-get update && sudo apt-get install -y texlive-full
+
+      - name: Compile CV
+        run: pdflatex -interaction=nonstopmode -halt-on-error cv.tex
+
+      - name: Deploy to Personal Site
+        run: |
+          git config --global user.name "RajonDey"
+          git config --global user.email "rajondeyofficial@gmail.com"
+          git clone https://x-access-token:${{ secrets.PERSONAL_SITE_TOKEN }}@github.com/RajonDey/rd-web site
+          cp cv.pdf site/public/
+          cd site
+          git add public/cv.pdf
+          git commit -m "Update latest CV"
+          git push origin main
