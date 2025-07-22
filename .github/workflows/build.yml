@@ -12,14 +12,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install minimal LaTeX packages
+      - name: Install Full LaTeX (one-time full setup)
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            texlive-latex-base \
-            texlive-latex-recommended \
-            texlive-fonts-recommended \
-            texlive-latex-extra
+          sudo apt-get install -y texlive-full
 
       - name: Compile CV
         run: pdflatex -interaction=nonstopmode -halt-on-error cv.tex
