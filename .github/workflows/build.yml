@@ -47,9 +47,15 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+          
+          # Use HTTPS clone with PAT if deploying to a private repo
           git clone https://x-access-token:${{ secrets.PERSONAL_SITE_TOKEN }}@github.com/RajonDey/rd-web site
+          
           cp cv.pdf site/public/
           cd site
           git add public/cv.pdf
-          git commit -m "Update CV: $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
+          
+          # Only commit if there are changes
+          git diff --cached --quiet || git commit -m "Update CV: $(date +'%Y-%m-%d %H:%M')"
+          
           git push origin main
